@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Collapse from "@mui/material/Collapse";
+import {
+  Box,
+  CssBaseline,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Collapse,
+} from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
@@ -26,7 +24,7 @@ const iconComponents = {
   MailIcon: <MailIcon />,
 };
 
-export function SidebarComponent({ mobileOpen, handleDrawerToggle }) {
+export function SidebarComponent({ mobileOpen, handleDrawerToggle, onSelect }) {
   const [openItems, setOpenItems] = useState({});
 
   const handleClick = (index) => {
@@ -49,7 +47,11 @@ export function SidebarComponent({ mobileOpen, handleDrawerToggle }) {
         <Collapse in={openItems[index]} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {menuItem.subItems.map((subItem) => (
-              <ListItemButton key={subItem.title} sx={{ pl: 4 }}>
+              <ListItemButton
+                key={subItem.title}
+                sx={{ pl: 4 }}
+                onClick={() => onSelect(subItem.title)}
+              >
                 <ListItemIcon>{iconComponents[subItem.icon]}</ListItemIcon>
                 <ListItemText primary={subItem.title} />
               </ListItemButton>
@@ -101,3 +103,4 @@ export function SidebarComponent({ mobileOpen, handleDrawerToggle }) {
     </Box>
   );
 }
+export default SidebarComponent;

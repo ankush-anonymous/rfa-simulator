@@ -1,13 +1,13 @@
-import * as React from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
-import { NavBarComponent } from "./NavBarComponent"; // Import your AppBar component
-import { SidebarComponent } from "./SidebarComponent"; // Import the SidebarComponent
+import NavBarComponent from "./NavBarComponent"; // Default import
+import SidebarComponent from "./SidebarComponent"; // Default import
 
 const drawerWidth = 240;
 
-export default function LayoutComponent({ children }) {
+export function LayoutComponent({ children, onSelect }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -21,6 +21,7 @@ export default function LayoutComponent({ children }) {
       <SidebarComponent
         mobileOpen={mobileOpen}
         handleDrawerToggle={handleDrawerToggle}
+        onSelect={onSelect}
       />
       <Box
         component="main"
@@ -36,3 +37,5 @@ export default function LayoutComponent({ children }) {
     </Box>
   );
 }
+
+export default LayoutComponent;

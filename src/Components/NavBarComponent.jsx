@@ -43,3 +43,4 @@ export function NavBarComponent({ handleDrawerToggle }) {
     </Box>
   );
 }
+export default NavBarComponent;

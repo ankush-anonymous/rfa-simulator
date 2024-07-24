@@ -28,5 +28,19 @@ module.exports = {
         },
       ],
     },
+    {
+      title: "Draggable Components",
+      icon: "InboxIcon",
+      subItems: [
+        {
+          title: "Battery",
+          icon: "CircleIcon",
+        },
+        {
+          title: "Sub Employee 2",
+          icon: "MailIcon",
+        },
+      ],
+    },
   ],
 };
