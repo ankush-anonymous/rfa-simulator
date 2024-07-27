@@ -21,7 +21,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/canvas" element={<Canvas />} />
+          <Route path="/" element={<Canvas />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

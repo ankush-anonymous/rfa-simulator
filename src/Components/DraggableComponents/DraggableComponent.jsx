@@ -1,47 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Draggable from "react-draggable";
 
-const DraggableComponent = ({ initialPosition, onDrop, children }) => {
-  const [dragging, setDragging] = useState(false);
+const DraggableComponent = ({
+  initialPosition,
+  onDrop,
+  children,
+  disabled,
+}) => {
   const [position, setPosition] = useState(initialPosition);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  const handleMouseDown = (e) => {
-    setDragging(true);
-    const offsetX = e.clientX - position.x;
-    const offsetY = e.clientY - position.y;
-    setOffset({ x: offsetX, y: offsetY });
-  };
+  useEffect(() => {
+    console.log(`DraggableComponent is ${disabled ? "disabled" : "enabled"}`);
+  }, [disabled]);
 
-  const handleMouseMove = (e) => {
-    if (dragging) {
-      const newPosition = {
-        x: e.clientX - offset.x,
-        y: e.clientY - offset.y,
-      };
-      setPosition(newPosition);
-      onDrop(newPosition);
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDragging(false);
+  const handleDrag = (e, data) => {
+    const newPosition = { x: data.x, y: data.y };
+    setPosition(newPosition);
+    onDrop(newPosition);
   };
 
   return (
-    <div
-      className="draggable-component"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      style={{
-        position: "absolute",
-        left: position.x,
-        top: position.y,
-        cursor: dragging ? "grabbing" : "grab",
-      }}
-    >
-      {children}
-    </div>
+    <Draggable position={position} onDrag={handleDrag} disabled={disabled}>
+      <div
+        style={{
+          cursor: disabled ? "default" : "grab",
+        }}
+      >
+        {children}
+      </div>
+    </Draggable>
   );
 };
 

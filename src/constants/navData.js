@@ -14,26 +14,25 @@ module.exports = {
         },
       ],
     },
-    {
-      title: "Employee",
-      icon: "InboxIcon",
-      subItems: [
-        {
-          title: "Sub Employee 1",
-          icon: "MailIcon",
-        },
-        {
-          title: "Sub Employee 2",
-          icon: "MailIcon",
-        },
-      ],
-    },
+
     {
       title: "Draggable Components",
       icon: "InboxIcon",
       subItems: [
         {
           title: "Battery",
+          icon: "CircleIcon",
+        },
+        {
+          title: "Fan",
+          icon: "CircleIcon",
+        },
+        {
+          title: "Switch",
+          icon: "CircleIcon",
+        },
+        {
+          title: "Bulb",
           icon: "CircleIcon",
         },
         {
