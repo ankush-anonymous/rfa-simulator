@@ -1,19 +1,32 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import LayoutComponent from "../Components/LayoutComponent";
 import DraggableBattery from "../Components/DraggableComponents/BatteryComponents";
-import DraggableComponent from "../Components/DraggableComponents/DraggableComponent";
-import HelperNavComponent from "../Components/HelperNavComponent";
-import { Typography } from "@mui/material";
 import DraggableFan from "../Components/DraggableComponents/FanComponent";
 import DraggableSwitch from "../Components/DraggableComponents/SwitchComponent";
 import DraggableBulb from "../Components/DraggableComponents/BulbComponent";
+import HelperNavComponent from "../Components/HelperNavComponent";
+import { Typography } from "@mui/material";
+import { initialProperties } from "../constants/componentProperties"; // Import initial properties
+import Wire from "../Components/WireComponent"; // Import the Wire component
+
+const initialJSON = {
+  nodes: [],
+  connections: [],
+};
 
 const Canvas = () => {
   const [components, setComponents] = useState([]);
+  const [jsonStructure, setJsonStructure] = useState(initialJSON);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [coordinates, setCoordinates] = useState({ x: 0, y: 0 });
   const [selectedTool, setSelectedTool] = useState("hand");
+  const [selectedComponents, setSelectedComponents] = useState([]);
   const canvasRef = useRef(null);
+
+  useEffect(() => {
+    console.log(jsonStructure);
+    console.log(selectedComponents);
+  }, [jsonStructure, selectedComponents]);
 
   const handleMouseMove = (event) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -27,18 +40,89 @@ const Canvas = () => {
     setTooltipVisible(false);
   };
 
-  const handleComponentSelect = (component) => {
+  const handleComponentSelect = (componentType) => {
+    const id = `${componentType.toLowerCase()}${components.length + 1}`;
     const newComponent = {
-      type: component,
+      id,
+      type: componentType,
       position: { x: 100, y: 100 },
+      properties: initialProperties[componentType] || {}, // Initialize properties
     };
     setComponents([...components, newComponent]);
+
+    // Update JSON structure
+    const newNode = {
+      id,
+      type: componentType.toLowerCase(),
+      position: { x: 100, y: 100 }, // Store the initial position
+      properties: initialProperties[componentType],
+    };
+    setJsonStructure((prevJson) => ({
+      ...prevJson,
+      nodes: [...prevJson.nodes, newNode],
+    }));
   };
 
   const handleDrop = (position, index) => {
     const updatedComponents = [...components];
     updatedComponents[index].position = position;
     setComponents(updatedComponents);
+
+    // Update the JSON structure with new positions
+    setJsonStructure((prevJson) => {
+      const updatedNodes = prevJson.nodes.map((node) =>
+        node.id === updatedComponents[index].id ? { ...node, position } : node
+      );
+      return { ...prevJson, nodes: updatedNodes };
+    });
+  };
+
+  const handleComponentClick = (id) => {
+    if (selectedTool === "cursor") {
+      setSelectedComponents((prevSelected) => {
+        const isSelected = prevSelected.includes(id);
+        if (isSelected) {
+          return prevSelected.filter((compId) => compId !== id);
+        } else {
+          return [...prevSelected, id];
+        }
+      });
+    }
+  };
+
+  const handleConnect = () => {
+    if (selectedComponents.length === 2) {
+      const [fromId, toId] = selectedComponents;
+      const fromComponent = components.find((comp) => comp.id === fromId);
+      const toComponent = components.find((comp) => comp.id === toId);
+
+      if (fromComponent && toComponent) {
+        const connectionExists = jsonStructure.connections.some(
+          (connection) =>
+            (connection.from === fromId && connection.to === toId) ||
+            (connection.from === toId && connection.to === fromId)
+        );
+
+        if (!connectionExists) {
+          const connection = {
+            from: fromId,
+            to: toId,
+          };
+
+          setJsonStructure((prevJson) => ({
+            ...prevJson,
+            connections: [...prevJson.connections, connection],
+          }));
+        } else {
+          alert("A connection already exists between these two components.");
+        }
+      }
+
+      // Reset selected components after adding connection
+      setSelectedComponents([]);
+    } else {
+      alert("Select exactly two nodes to connect.");
+    }
   };
 
   return (
@@ -46,14 +130,9 @@ const Canvas = () => {
       <HelperNavComponent
         selectedTool={selectedTool}
         onToolChange={setSelectedTool}
+        onConnect={handleConnect}
       />
-      <Typography
-        variant="subtitle1"
-        gutterBottom
-        style={{ textAlign: "center", marginTop: "10px" }}
-      >
-        Selected Tool: {selectedTool}
-      </Typography>
+
       <div style={{ position: "fixed", border: "1px solid black" }}>
         x: {coordinates.x.toFixed(0)}, y: {coordinates.y.toFixed(0)}
       </div>
@@ -76,49 +155,61 @@ const Canvas = () => {
         </Typography>
 
         {components.map((comp, index) => {
-          switch (comp.type) {
-            case "Battery":
-              return (
-                <DraggableBattery
-                  key={index}
-                  initialPosition={comp.position}
-                  onDrop={(position) => handleDrop(position, index)}
-                  disabled={selectedTool === "cursor"}
-                />
-              );
-            case "Fan":
-              return (
-                <DraggableFan
-                  key={index}
-                  initialPosition={comp.position}
-                  onDrop={(position) => handleDrop(position, index)}
-                  disabled={selectedTool === "cursor"}
-                />
-              );
-            case "Switch":
-              return (
-                <DraggableSwitch
-                  key={index}
-                  initialPosition={comp.position}
-                  onDrop={(position) => handleDrop(position, index)}
-                  disabled={selectedTool === "cursor"}
-                />
-              );
-            case "Bulb":
-              return (
-                <DraggableBulb
-                  key={index}
-                  initialPosition={comp.position}
-                  onDrop={(position) => handleDrop(position, index)}
-                  disabled={selectedTool === "cursor"}
-                />
-              );
+          const isSelected = selectedComponents.includes(comp.id);
 
-            default:
-              return null;
+          const Component = (() => {
+            switch (comp.type) {
+              case "Battery":
+                return DraggableBattery;
+              case "Fan":
+                return DraggableFan;
+              case "Switch":
+                return DraggableSwitch;
+              case "Bulb":
+                return DraggableBulb;
+              default:
+                return null;
+            }
+          })();
+
+          return Component ? (
+            <Component
+              key={index}
+              initialPosition={comp.position}
+              onDrop={(position) => handleDrop(position, index)}
+              disabled={selectedTool === "cursor"}
+              onClick={() => handleComponentClick(comp.id)}
+              style={{
+                border: isSelected ? "2px solid blue" : "none",
+              }}
+            />
+          ) : null;
+        })}
+
+        {jsonStructure.connections.map((connection, index) => {
+          const fromComponent = components.find(
+            (comp) => comp.id === connection.from
+          );
+          const toComponent = components.find(
+            (comp) => comp.id === connection.to
+          );
+
+          if (fromComponent && toComponent) {
+            return (
+              <Wire
+                key={index}
+                x1={fromComponent.position.x}
+                y1={fromComponent.position.y}
+                x2={toComponent.position.x}
+                y2={toComponent.position.y}
+              />
+            );
           }
+
+          return null;
         })}
       </div>
+      <pre>{JSON.stringify(jsonStructure, null, 2)}</pre>
     </LayoutComponent>
   );
 };

@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
+// DraggableComponent.js
+import React from "react";
 import Draggable from "react-draggable";
 
 const DraggableComponent = ({
   initialPosition,
   onDrop,
-  children,
+  onClick, // Add onClick prop
   disabled,
+  children,
 }) => {
-  const [position, setPosition] = useState(initialPosition);
-
-  useEffect(() => {
-    console.log(`DraggableComponent is ${disabled ? "disabled" : "enabled"}`);
-  }, [disabled]);
+  const [position, setPosition] = React.useState(initialPosition);
 
   const handleDrag = (e, data) => {
     const newPosition = { x: data.x, y: data.y };
@@ -22,6 +20,7 @@ const DraggableComponent = ({
   return (
     <Draggable position={position} onDrag={handleDrag} disabled={disabled}>
       <div
+        onClick={onClick} // Handle click events
         style={{
           cursor: disabled ? "default" : "grab",
         }}

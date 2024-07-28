@@ -1,9 +1,10 @@
 import React from "react";
-import { AppBar, Toolbar, IconButton, Tooltip } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Tooltip, Button } from "@mui/material";
 import PanToolIcon from "@mui/icons-material/PanTool";
 import MouseIcon from "@mui/icons-material/Mouse";
+import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
 
-const HelperNavComponent = ({ selectedTool, onToolChange }) => {
+const HelperNavComponent = ({ selectedTool, onToolChange, onConnect }) => {
   return (
     <AppBar
       position="static"
@@ -53,6 +54,15 @@ const HelperNavComponent = ({ selectedTool, onToolChange }) => {
             <MouseIcon style={{ color: "black" }} />
           </IconButton>
         </Tooltip>
+        <Button
+          variant="contained"
+          color="inherit"
+          startIcon={<ConnectWithoutContactIcon />}
+          onClick={onConnect}
+          style={{ color: "black" }}
+        >
+          Connect
+        </Button>
       </Toolbar>
     </AppBar>
   );
