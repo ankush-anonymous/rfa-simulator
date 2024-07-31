@@ -1,0 +1,14 @@
+{
+  "menu": [
+    {
+      "name": "Component 1",
+      "icon": "icon1.png",
+      "subcomponents": ["Subcomponent 1.1", "Subcomponent 1.2"]
+    },
+    {
+      "name": "Component 2",
+      "icon": "icon2.png",
+      "subcomponents": ["Subcomponent 2.1", "Subcomponent 2.2"]
+    }
+  ]
+}

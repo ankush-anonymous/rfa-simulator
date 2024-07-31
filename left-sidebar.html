@@ -1,0 +1,141 @@
+<!-- left-sidebar.html -->
+<div id="left-sidebar">
+  <ul id="menu">
+    <!-- Menu items will be populated here -->
+  </ul>
+</div>
+
+<style>
+  #left-sidebar {
+    position: fixed;
+    left: 0;
+    top: 60px; /* Adjust based on the height of your navbar */
+    width: 200px;
+    height: calc(100% - 60px); /* Adjust based on the height of your navbar */
+    background-color: #333333c0;
+    color: white;
+    padding-top: 20px;
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+  }
+
+  #left-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  #left-sidebar ul li {
+    padding: 10px;
+  }
+
+  #left-sidebar ul li a {
+    display: flex;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  #left-sidebar ul li a:hover {
+    background-color: #111;
+  }
+
+  .dropdown-content {
+    display: none;
+    list-style-type: none;
+    padding-left: 20px;
+    background-color: #444;
+  }
+
+  .dropdown-content li {
+    padding: 5px 0;
+  }
+
+  .dropdown-content li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .dropdown-content li a:hover {
+    background-color: #555;
+  }
+
+  .menu-icon {
+    margin-right: 10px;
+  }
+
+  .arrow {
+    margin-left: auto;
+  }
+
+  .show {
+    display: block;
+  }
+</style>
+
+<script>
+  // Function to create the menu structure
+  function createMenu(menuData) {
+    const menu = document.getElementById("menu");
+
+    menuData.menu.forEach((component) => {
+      const li = document.createElement("li");
+
+      // Create the main component link
+      const a = document.createElement("a");
+      a.href = "#";
+
+      // Create and add the icon
+      const img = document.createElement("img");
+      img.src = component.icon;
+      img.alt = component.name;
+      img.className = "menu-icon";
+      img.style.height = "20px"; // Adjust icon size as needed
+      a.appendChild(img);
+
+      // Add the component name
+      const span = document.createElement("span");
+      span.textContent = component.name;
+      a.appendChild(span);
+
+      // Add the arrow
+      const arrow = document.createElement("span");
+      arrow.className = "arrow";
+      arrow.textContent = "▶";
+      a.appendChild(arrow);
+
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        const submenu = a.nextElementSibling;
+        submenu.classList.toggle("show");
+        arrow.textContent = submenu.classList.contains("show") ? "▼" : "▶";
+      });
+      li.appendChild(a);
+
+      // Create the submenu
+      const ul = document.createElement("ul");
+      ul.className = "dropdown-content";
+      component.subcomponents.forEach((subcomponent) => {
+        const subLi = document.createElement("li");
+        const subA = document.createElement("a");
+        subA.href = "#";
+        subA.textContent = subcomponent;
+        subLi.appendChild(subA);
+        ul.appendChild(subLi);
+      });
+
+      li.appendChild(ul);
+      menu.appendChild(li);
+    });
+  }
+
+  // Fetch the menu data from the JSON file
+  fetch("menu.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => createMenu(data))
+    .catch((error) => console.error("Error fetching menu data:", error));
+</script>

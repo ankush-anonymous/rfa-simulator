@@ -1,0 +1,41 @@
+<!-- right-sidebar.html -->
+<div id="right-sidebar">
+  <ul>
+    <li><a href="#link1">Link 1</a></li>
+    <li><a href="#link2">Link 2</a></li>
+    <li><a href="#link3">Link 3</a></li>
+    <li><a href="#link4">Link 4</a></li>
+  </ul>
+</div>
+
+<style>
+  #right-sidebar {
+    position: fixed;
+    right: 0;
+    top: 60px; /* Adjust based on the height of your navbar */
+    width: 200px;
+    height: calc(100% - 60px); /* Adjust based on the height of your navbar */
+    background-color: #333333c0;
+    color: white;
+    padding-top: 20px;
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+  }
+
+  #right-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  #right-sidebar ul li {
+    padding: 10px;
+  }
+
+  #right-sidebar ul li a {
+    color: white;
+    text-decoration: none;
+  }
+
+  #right-sidebar ul li a:hover {
+    background-color: #111;
+  }
+</style>

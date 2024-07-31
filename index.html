@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- Include Navbar -->
+    <div id="navbar-placeholder"></div>
+    <script>
+      fetch("navbar.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("navbar-placeholder").innerHTML = data;
+        });
+    </script>
+
+    <!-- Include Left Sidebar -->
+    <div id="left-sidebar-placeholder"></div>
+    <script>
+      fetch("left-sidebar.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("left-sidebar-placeholder").innerHTML = data;
+        });
+    </script>
+
+    <!-- Include Right Sidebar -->
+    <div id="right-sidebar-placeholder"></div>
+    <script>
+      fetch("right-sidebar.html")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("right-sidebar-placeholder").innerHTML = data;
+        });
+    </script>
+
+    <!-- Main Content Area -->
+    <div
+      id="main-content"
+      style="
+        margin-top: 100px;
+        margin-left: 210px;
+        margin-right: 210px;
+        padding: 20px;
+      "
+    >
+      <h1>Welcome to the Main Content</h1>
+      <p>
+        This is the main content area. The sidebars are fixed on the left and
+        right.
+      </p>
+    </div>
+  </body>
+</html>
